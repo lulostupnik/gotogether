@@ -16,6 +16,6 @@ private long max;
         if (file == null || file.isEmpty()) {
             return true;
         }
-        return file.getSize() <= max * 1024 * 1024;
+        return file.getSize() <= max * 1024 * 1024 ;
     }
 }
