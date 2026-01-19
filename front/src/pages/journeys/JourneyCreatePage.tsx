@@ -4,6 +4,7 @@ import Button from "@/components/ui/Button";
 import { classNames } from "@/lib/utils/classNames";
 import CatalogAutocompleteField from "@/components/form/CatalogAutocompleteField";
 import { searchUniversities, type CatalogOption } from "@/lib/api/catalog";
+import { createJourney } from "@/lib/api/journeys";
 import { useI18n } from "@/lib/i18n";
 
 interface JourneyFormState {
@@ -31,6 +32,7 @@ export default function JourneyCreatePage() {
     const [errors, setErrors] = useState<JourneyErrors>({});
     const [touched, setTouched] = useState<JourneyTouched>({});
     const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
     const [destinationQuery, setDestinationQuery] = useState(form.destination?.name ?? "");
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
@@ -67,7 +69,7 @@ export default function JourneyCreatePage() {
         return nextErrors;
     }, [t]);
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const nextErrors = validate(form);
         setTouched((prev) => ({
@@ -78,6 +80,7 @@ export default function JourneyCreatePage() {
             description: true,
         }));
         setErrors(nextErrors);
+        setSubmitError(null);
         if (Object.keys(nextErrors).length > 0) {
             if (nextErrors.description) {
                 descriptionRef.current?.focus();
@@ -85,19 +88,25 @@ export default function JourneyCreatePage() {
             return;
         }
 
-        setSubmitting(true);
-        window.setTimeout(() => {
-            console.info("Submitting journey", {
-                ...form,
-                destinationId: form.destination?.id,
+        try {
+            setSubmitting(true);
+            const journey = await createJourney({
+                destinationUniversity: form.destination?.name ?? "",
+                startDate: form.startDate,
+                endDate: form.endDate,
+                description: form.description.trim(),
             });
-            setSubmitting(false);
             setForm({ ...INITIAL_FORM });
             setDestinationQuery("");
             setTouched({});
             setErrors({});
-            navigate("/journeys");
-        }, 500);
+            navigate(`/journeys/${journey.id}`);
+        } catch (err) {
+            console.error("Failed to create journey", err);
+            setSubmitError(t("admin.dashboard.error", { defaultValue: "Error cargando datos." }));
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const handleCancel = () => {
@@ -189,6 +198,8 @@ export default function JourneyCreatePage() {
                             <p className="form-field__text form-field__text--error">{errors.description}</p>
                         )}
                     </div>
+
+                    {submitError && <p className="form-field__text form-field__text--error">{submitError}</p>}
 
                     <div className="journey-form__actions">
                         <Button type="button" variant="ghost" onClick={handleCancel} disabled={submitting}>
