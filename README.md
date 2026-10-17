@@ -20,14 +20,10 @@ mvn clean package
 
 ## Usuarios
 
-En la base de producción tenemos configurados usuarios para cada nivel de acceso de
-la aplicación:
+En la base de producción hay usuarios configurados para cada nivel de acceso de la
+aplicación (administrador y usuario).
 
-| Nivel de acceso | Email                     | Contraseña    |
-|-----------------|---------------------------|---------------|
-| Administrador   | `paw.2025a.10@gmail.com`  | `***REMOVED***`   |
-| Usuario         | `lstupnik@itba.edu.ar`    | `***REMOVED***` |
-| Usuario         | `***REMOVED***`   | `***REMOVED***` |
+> **Demo credentials available on request.**
 
 El resto del contenido de la aplicación (eventos, viajes, calificaciones) es público
 y se puede navegar sin autenticarse.
