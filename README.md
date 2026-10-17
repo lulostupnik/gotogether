@@ -5,9 +5,6 @@ estudiantes universitarios. Está construida como una API REST (Spring + Jersey 
 Hibernate + Spring Security) que sirve a una single page application hecha con
 React.
 
-La aplicación está deployada en el servidor de la cátedra y se puede acceder
-[acá](http://pawserver.it.itba.edu.ar/paw-2025a-10/).
-
 ## Build and run
 
 El proyecto se construye con Maven y Java 21. Alcanza con empaquetarlo y servir el
@@ -18,15 +15,10 @@ adecuados: la aplicación genera por su cuenta todas las tablas necesarias.
 mvn clean package
 ```
 
-## Usuarios
+## Roles
 
-En la base de producción hay usuarios configurados para cada nivel de acceso de la
-aplicación (administrador y usuario).
-
-> **Demo credentials available on request.**
-
-El resto del contenido de la aplicación (eventos, viajes, calificaciones) es público
-y se puede navegar sin autenticarse.
+La aplicación tiene dos niveles de acceso: usuario y administrador. El contenido
+(eventos, viajes, calificaciones) es público y se puede navegar sin autenticarse.
 
 El administrador puede, además de todo lo que puede un usuario, gestionar los
 catálogos de ciudades, carreras, universidades e intereses, resolver los reportes que
